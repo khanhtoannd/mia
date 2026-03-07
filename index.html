@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>i love u mia</title>
+  <style>
+    :root {
+      --bg: #080510;
+      --text-main: #ffeaf4;
+      --text-soft: rgba(255, 233, 244, 0.9);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 77, 136, 0.16), transparent 35%),
+        radial-gradient(circle at 70% 80%, rgba(175, 99, 255, 0.18), transparent 35%),
+        radial-gradient(circle at 50% 50%, rgba(255, 53, 89, 0.08), transparent 45%),
+        var(--bg);
+      color: white;
+      touch-action: none;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(48px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .g1 {
+      width: min(55vw, 520px);
+      height: min(55vw, 520px);
+      background: radial-gradient(circle, rgba(255, 110, 164, 0.4), rgba(255, 110, 164, 0));
+      left: 20%;
+      top: 10%;
+      animation: drift1 14s ease-in-out infinite alternate;
+    }
+
+    .g2 {
+      width: min(45vw, 450px);
+      height: min(45vw, 450px);
+      background: radial-gradient(circle, rgba(167, 101, 255, 0.32), rgba(167, 101, 255, 0));
+      right: 12%;
+      bottom: 8%;
+      animation: drift2 16s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 { from { transform: translate(0, 0) scale(1);} to { transform: translate(6vw, 4vh) scale(1.07);} }
+    @keyframes drift2 { from { transform: translate(0, 0) scale(1);} to { transform: translate(-5vw, -3vh) scale(1.08);} }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 15% 20%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 85% 35%, rgba(255,180,220,0.8), transparent),
+        radial-gradient(2px 2px at 70% 70%, rgba(220,190,255,0.7), transparent),
+        radial-gradient(2px 2px at 35% 65%, rgba(255,255,255,0.65), transparent),
+        radial-gradient(2px 2px at 50% 10%, rgba(255,160,190,0.8), transparent);
+      animation: twinkle 4.5s linear infinite;
+      opacity: 0.8;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      pointer-events: none;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: var(--size, 2.4px);
+      height: var(--size, 2.4px);
+      left: var(--x, 50%);
+      top: var(--y, -12%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.92), rgba(255,210,235,0.45) 45%, rgba(255,255,255,0));
+      box-shadow: 0 0 10px rgba(255, 166, 220, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: screen;
+      animation:
+        snowfall var(--fall, 13s) linear infinite,
+        shimmer var(--twinkle, 3.5s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s), var(--delay, 0s);
+    }
+
+    @keyframes twinkle { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.95; } }
+    @keyframes shimmer { 0%, 100% { filter: brightness(0.85); } 50% { filter: brightness(1.25); } }
+    @keyframes snowfall {
+      0% {
+        transform: translate3d(0, -8vh, 0);
+        opacity: 0;
+      }
+      12% { opacity: 1; }
+      100% {
+        transform: translate3d(var(--driftX, 0px), 118vh, 0);
+        opacity: 0.35;
+      }
+    }
+
+    .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 11;
+      font-size: clamp(2.4rem, 7.3vw, 6rem);
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      text-align: center;
+      width: min(90vw, 980px);
+      line-height: 1.1;
+      color: var(--text-main);
+      text-shadow:
+        0 0 12px rgba(255, 189, 219, 0.85),
+        0 0 28px rgba(255, 103, 170, 0.75),
+        0 0 60px rgba(184, 103, 255, 0.45);
+      animation: heartbeat 3.5s ease-in-out infinite;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
+      50% { transform: translate(-50%, -50%) scale(1.04); filter: brightness(1.12); }
+    }
+
+    .layer { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+
+    .phrase {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      white-space: nowrap;
+      color: var(--text-soft);
+      font-size: clamp(0.66rem, 1.02vw, 1.05rem);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-shadow: 0 0 10px rgba(255, 130, 195, 0.3);
+      will-change: transform, opacity;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .music-control {
+      position: fixed;
+      right: 16px;
+      top: 14px;
+      z-index: 2147483647;
+      border: 1px solid rgba(255, 219, 238, 0.35);
+      background: rgba(18, 10, 30, 0.45);
+      color: #ffeaf4;
+      font-size: 0.84rem;
+      letter-spacing: 0.02em;
+      border-radius: 999px;
+      padding: 8px 12px;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+    }
+
+    .music-control.disabled {
+      opacity: 0.6;
+      filter: grayscale(0.25);
+    }
+
+    .phrase.featured-english {
+      color: #fff2fa;
+      font-size: clamp(0.86rem, 1.35vw, 1.32rem);
+      font-weight: 600;
+      text-shadow:
+        0 0 8px rgba(255, 214, 235, 0.9),
+        0 0 18px rgba(255, 128, 188, 0.8),
+        0 0 30px rgba(255, 94, 175, 0.6);
+      letter-spacing: 0.02em;
+      opacity: 0.98 !important;
+      animation: phraseSparkle 2.8s ease-in-out infinite;
+    }
+
+    @keyframes phraseSparkle {
+      0%, 100% {
+        filter: brightness(0.95);
+        text-shadow:
+          0 0 8px rgba(255, 214, 235, 0.8),
+          0 0 18px rgba(255, 128, 188, 0.75),
+          0 0 30px rgba(255, 94, 175, 0.55);
+      }
+      50% {
+        filter: brightness(1.25);
+        text-shadow:
+          0 0 10px rgba(255, 242, 250, 1),
+          0 0 24px rgba(255, 156, 205, 0.95),
+          0 0 42px rgba(255, 108, 182, 0.85);
+      }
+    }
+
+    @media (max-width: 760px) {
+      html, body { touch-action: pan-y; }
+      .g1 { width: min(70vw, 420px); height: min(70vw, 420px); left: 8%; top: 6%; }
+      .g2 { width: min(64vw, 390px); height: min(64vw, 390px); right: 3%; bottom: 6%; }
+      .phrase { font-size: clamp(0.58rem, 2.3vw, 0.84rem); opacity: 0.78; }
+      .center { font-size: clamp(1.85rem, 9vw, 3.3rem); width: 92vw; }
+      .music-control {
+        right: max(10px, env(safe-area-inset-right));
+        top: max(10px, env(safe-area-inset-top));
+        font-size: 0.72rem;
+        padding: 6px 10px;
+      }
+      .phrase.featured-english { font-size: clamp(0.72rem, 3.1vw, 1.02rem); }
+    }
+
+    @media (max-width: 430px) {
+      .center { font-size: clamp(1.7rem, 8.5vw, 2.6rem); letter-spacing: 0.04em; }
+      .music-control { font-size: 0.68rem; padding: 6px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene" aria-label="Romantic floating translations around center text">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="stars"></div>
+
+    <h1 class="center">i love u mia</h1>
+    <section class="layer" id="orbitLayer"></section>
+  </main>
+  <div class="sparkles" id="sparkles"></div>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="至少还有你 (Live).mp3" type="audio/mpeg">
+    <source src="至少还有你.mp3" type="audio/mpeg">
+  </audio>
+  <button class="music-control" id="musicToggle" aria-label="Toggle background music">♪ Play music</button>
+
+  <script>
+    const translations = [
+      "I love you, Mia", "I adore you, Mia", "I cherish you, Mia", "I miss you, Mia", "You are my love, Mia",
+      "My heart is yours, Mia", "Forever yours, Mia", "You are my moonlight, Mia", "You are my sunshine, Mia", "You are my dream, Mia",
+      "I am crazy about you, Mia", "You mean everything to me, Mia", "I am yours, Mia", "I choose you every day, Mia", "You are my forever, Mia",
+      "My soul loves you, Mia", "My heart beats for you, Mia", "You are my favorite person, Mia", "I fall for you every day, Mia", "I love your smile, Mia",
+      "You light up my world, Mia", "You are my home, Mia", "You are my peace, Mia", "You are my star, Mia", "You are my angel, Mia",
+      "With you, I am complete, Mia", "I treasure you, Mia", "I need you, Mia", "I want you, Mia", "I trust you, Mia",
+      "I care for you deeply, Mia", "I hold you in my heart, Mia", "I think of you always, Mia", "You are my beautiful love, Mia", "You are my sweetest thought, Mia",
+      "I am grateful for you, Mia", "You are my destiny, Mia", "You are my once in a lifetime, Mia", "I am happiest with you, Mia", "I will always love you, Mia"
+    ];
+    const layer = document.getElementById("orbitLayer");
+    const sparklesLayer = document.getElementById("sparkles");
+    const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const items = [];
+
+    let pointerX = center.x;
+    let pointerY = center.y;
+    let hasPointer = false;
+
+    const isPhone = () => window.innerWidth <= 760;
+    const baseRadius = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.24 : 0.3);
+    const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.066 : 0.08);
+
+    const music = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+    let musicStarted = false;
+
+    function setMusicLabel(mode) {
+      if (mode === "playing") musicToggle.textContent = "❚❚ Pause music";
+      if (mode === "ready") musicToggle.textContent = "▶ Play music";
+      if (mode === "missing") musicToggle.textContent = "⚠ Missing audio file";
+    }
+
+    async function startMusic() {
+      try {
+        await music.play();
+        musicStarted = true;
+        setMusicLabel("playing");
+        return true;
+      } catch {
+        setMusicLabel("ready");
+        return false;
+      }
+    }
+
+    function markMissingMusic() {
+      musicToggle.classList.add("disabled");
+      setMusicLabel("missing");
+    }
+
+    music.addEventListener("error", markMissingMusic);
+
+    musicToggle.addEventListener("click", async () => {
+      if (!music.currentSrc) {
+        markMissingMusic();
+        return;
+      }
+      if (music.paused) {
+        await startMusic();
+      } else {
+        music.pause();
+        setMusicLabel("ready");
+      }
+    });
+
+    window.addEventListener("pointerdown", startMusic, { once: true });
+    window.addEventListener("touchstart", startMusic, { once: true, passive: true });
+
+    window.addEventListener("load", () => {
+      setMusicLabel("ready");
+    });
+
+    function createSparkles() {
+      sparklesLayer.innerHTML = "";
+      const sparkleCount = isPhone()
+        ? Math.max(120, Math.floor((window.innerWidth * window.innerHeight) / 7800))
+        : Math.max(220, Math.floor((window.innerWidth * window.innerHeight) / 6200));
+      for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement("span");
+        sparkle.className = "sparkle";
+        sparkle.style.setProperty("--x", `${Math.random() * 100}%`);
+        sparkle.style.setProperty("--size", `${(Math.random() * 2.4 + 0.8).toFixed(2)}px`);
+        sparkle.style.setProperty("--twinkle", `${(Math.random() * 2.8 + 2.2).toFixed(2)}s`);
+        sparkle.style.setProperty("--fall", `${(Math.random() * 10 + 9).toFixed(2)}s`);
+        sparkle.style.setProperty("--driftX", `${(Math.random() * 140 - 70).toFixed(1)}px`);
+        sparkle.style.setProperty("--delay", `${(-Math.random() * 18).toFixed(2)}s`);
+        sparklesLayer.appendChild(sparkle);
+      }
+    }
+
+    function createPhrases() {
+      layer.innerHTML = "";
+      items.length = 0;
+
+      const ringCount = isPhone() ? 6 : 8;
+      const rings = Array.from({ length: ringCount }, () => []);
+
+      translations.forEach((text, index) => {
+        rings[index % ringCount].push({ text, index });
+      });
+
+      rings.forEach((ringTexts, ring) => {
+        ringTexts.forEach((entry, ringIndex) => {
+          const phrase = document.createElement("span");
+          phrase.className = "phrase";
+          phrase.textContent = entry.text;
+          if (entry.text.toLowerCase() === "i love you, mia") {
+            phrase.classList.add("featured-english");
+          }
+          layer.appendChild(phrase);
+
+          const spread = (ringIndex / ringTexts.length) * Math.PI * 2;
+          const angle = spread + ring * 0.24 + (ring % 2) * 0.08;
+          const speed = 0.00034 + ring * 0.00007;
+          const radius = baseRadius() + ring * ringGap() + Math.random() * 14;
+
+          items.push({
+            el: phrase,
+            ring,
+            angle,
+            speed,
+            radius,
+            jitterSeed: Math.random() * Math.PI * 2,
+            offsetX: 0,
+            offsetY: 0,
+            posX: center.x,
+            posY: center.y
+          });
+        });
+      });
+    }
+
+    function handlePointer(x, y) {
+      pointerX = x;
+      pointerY = y;
+      hasPointer = true;
+    }
+
+    window.addEventListener("mousemove", (e) => handlePointer(e.clientX, e.clientY));
+    window.addEventListener("touchmove", (e) => {
+      const t = e.touches[0];
+      if (t) handlePointer(t.clientX, t.clientY);
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      center.x = window.innerWidth / 2;
+      center.y = window.innerHeight / 2;
+      createSparkles();
+      createPhrases();
+    });
+
+    function animate(time) {
+      const now = time || 0;
+      if (!hasPointer) {
+        const idleRadius = Math.min(window.innerWidth, window.innerHeight) * 0.09;
+        pointerX = center.x + Math.cos(now * 0.00015) * idleRadius;
+        pointerY = center.y + Math.sin(now * 0.00012) * idleRadius;
+      }
+
+      for (const item of items) {
+        item.angle += item.speed;
+
+        const wobble = Math.sin(now * 0.00095 + item.jitterSeed) * 9;
+        const orbitRadius = item.radius + wobble;
+        const targetX = center.x + Math.cos(item.angle) * orbitRadius;
+        const targetY = center.y + Math.sin(item.angle) * orbitRadius * 0.72;
+
+        const dx = targetX + item.offsetX - pointerX;
+        const dy = targetY + item.offsetY - pointerY;
+        const dist = Math.hypot(dx, dy);
+        const forceRange = isPhone() ? 130 : 160;
+
+        if (dist < forceRange && dist > 0.0001) {
+          const strength = (1 - dist / forceRange) ** 1.8;
+          const push = strength * (isPhone() ? 7.2 : 9.5);
+          item.offsetX += (dx / dist) * push;
+          item.offsetY += (dy / dist) * push;
+        }
+
+        item.offsetX *= 0.93;
+        item.offsetY *= 0.93;
+
+        item.posX += (targetX + item.offsetX - item.posX) * 0.09;
+        item.posY += (targetY + item.offsetY - item.posY) * 0.09;
+
+        const opacity = 0.34 + (item.ring + 1) * 0.07;
+        item.el.style.opacity = Math.min(opacity, 0.84).toFixed(2);
+        item.el.style.transform = `translate(calc(-50% + ${item.posX - center.x}px), calc(-50% + ${item.posY - center.y}px))`;
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    createSparkles();
+    createPhrases();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
