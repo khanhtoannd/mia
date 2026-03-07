@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>i love u mia</title>
+  <style>
+    :root {
+      --bg: #080510;
+      --text-main: #ffeaf4;
+      --text-soft: rgba(255, 233, 244, 0.9);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 77, 136, 0.16), transparent 35%),
+        radial-gradient(circle at 70% 80%, rgba(175, 99, 255, 0.18), transparent 35%),
+        radial-gradient(circle at 50% 50%, rgba(255, 53, 89, 0.08), transparent 45%),
+        var(--bg);
+      color: white;
+      touch-action: none;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(48px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .g1 {
+      width: min(55vw, 520px);
+      height: min(55vw, 520px);
+      background: radial-gradient(circle, rgba(255, 110, 164, 0.4), rgba(255, 110, 164, 0));
+      left: 20%;
+      top: 10%;
+      animation: drift1 14s ease-in-out infinite alternate;
+    }
+
+    .g2 {
+      width: min(45vw, 450px);
+      height: min(45vw, 450px);
+      background: radial-gradient(circle, rgba(167, 101, 255, 0.32), rgba(167, 101, 255, 0));
+      right: 12%;
+      bottom: 8%;
+      animation: drift2 16s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 { from { transform: translate(0, 0) scale(1);} to { transform: translate(6vw, 4vh) scale(1.07);} }
+    @keyframes drift2 { from { transform: translate(0, 0) scale(1);} to { transform: translate(-5vw, -3vh) scale(1.08);} }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 15% 20%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 85% 35%, rgba(255,180,220,0.8), transparent),
+        radial-gradient(2px 2px at 70% 70%, rgba(220,190,255,0.7), transparent),
+        radial-gradient(2px 2px at 35% 65%, rgba(255,255,255,0.65), transparent),
+        radial-gradient(2px 2px at 50% 10%, rgba(255,160,190,0.8), transparent);
+      animation: twinkle 4.5s linear infinite;
+      opacity: 0.8;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      pointer-events: none;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: var(--size, 2.4px);
+      height: var(--size, 2.4px);
+      left: var(--x, 50%);
+      top: var(--y, -12%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.92), rgba(255,210,235,0.45) 45%, rgba(255,255,255,0));
+      box-shadow: 0 0 10px rgba(255, 166, 220, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: screen;
+      animation:
+        snowfall var(--fall, 13s) linear infinite,
+        shimmer var(--twinkle, 3.5s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s), var(--delay, 0s);
+    }
+
+    @keyframes twinkle { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.95; } }
+    @keyframes shimmer { 0%, 100% { filter: brightness(0.85); } 50% { filter: brightness(1.25); } }
+    @keyframes snowfall {
+      0% {
+        transform: translate3d(0, -8vh, 0);
+        opacity: 0;
+      }
+      12% { opacity: 1; }
+      100% {
+        transform: translate3d(var(--driftX, 0px), 118vh, 0);
+        opacity: 0.35;
+      }
+    }
+
+    .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 11;
+      font-size: clamp(2.4rem, 7.3vw, 6rem);
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-main);
+      text-shadow:
+        0 0 12px rgba(255, 189, 219, 0.85),
+        0 0 28px rgba(255, 103, 170, 0.75),
+        0 0 60px rgba(184, 103, 255, 0.45);
+      animation: heartbeat 3.5s ease-in-out infinite;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
+      50% { transform: translate(-50%, -50%) scale(1.04); filter: brightness(1.12); }
+    }
+
+    .layer { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+
+    .phrase {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      white-space: nowrap;
+      color: var(--text-soft);
+      font-size: clamp(0.66rem, 1.02vw, 1.05rem);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-shadow: 0 0 10px rgba(255, 130, 195, 0.3);
+      will-change: transform, opacity;
+      pointer-events: none;
+      user-select: none;
+    }
+
+
+
+    .music-control {
+      position: fixed;
+      right: 16px;
+      top: 14px;
+      z-index: 2147483647;
+      border: 1px solid rgba(255, 219, 238, 0.35);
+      background: rgba(18, 10, 30, 0.45);
+      color: #ffeaf4;
+      font-size: 0.84rem;
+      letter-spacing: 0.02em;
+      border-radius: 999px;
+      padding: 8px 12px;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+    }
+
+    @media (max-width: 760px) {
+      .phrase { font-size: clamp(0.62rem, 2.45vw, 0.9rem); opacity: 0.84; }
+      .center { font-size: clamp(2.1rem, 10vw, 4.1rem); }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene" aria-label="Romantic floating translations around center text">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="stars"></div>
+
+    <h1 class="center">窝好想泥，米亚</h1>
+    <section class="layer" id="orbitLayer"></section>
+  </main>
+  <div class="sparkles" id="sparkles"></div>
+
+  <audio id="bgMusic" src="至少还有你.mp3" loop preload="auto"></audio>
+  <button class="music-control" id="musicToggle" aria-label="Toggle background music">♪ 至少还有你</button>
+
+  <script>
+    const translations = [
+      "I love you, Mia", "Te amo, Mia", "Je t'aime, Mia", "Ti amo, Mia", "Ich liebe dich, Mia",
+      "Eu te amo, Mia", "Я люблю тебя, Мия", "Українською: Я кохаю тебе, Мія", "我爱你，米娅", "我愛你，米婭",
+      "愛してる、ミア", "사랑해, 미아", "أحبك يا ميا", "فارسی: دوستت دارم میا", "אני אוהב אותך, מיה",
+      "मैं तुमसे प्यार करता हूँ, मिया", "আমি তোমাকে ভালোবাসি, মিয়া", "میں تم سے محبت کرتا ہوں، میا",
+      "Seni seviyorum, Mia", "Σ' αγαπώ, Μία", "Kocham cię, Mia", "Ik hou van je, Mia",
+      "Jag älskar dig, Mia", "Jeg elsker dig, Mia", "Jeg elsker deg, Mia", "Minä rakastan sinua, Mia",
+      "Mahal kita, Mia", "Anh yêu em, Mia", "Aku cinta kamu, Mia", "ฉันรักเธอ มีอา",
+      "Szeretlek, Mia", "Te iubesc, Mia", "Обичам те, Миа", "Volim te, Mia", "Ljubim ta, Mia",
+      "Es mīlu tevi, Mia", "Aš tave myliu, Mia", "Miluji tě, Mia", "Ľúbim ťa, Mia",
+      "Ngiyakuthanda, Mia", "Nakupenda, Mia", "Ndimakukonda, Mia", "Mən səni sevirəm, Mia",
+      "Ninakupenda, Mia", "Inħobbok, Mia", "Rwy'n dy garu di, Mia", "Tha gaol agam ort, Mia",
+      "Is breá liom thú, Mia", "T'estimo, Mia", "Estimo't, Mia", "Ma armastan sind, Mia",
+      "Ég elska þig, Mia", "Kuv hlub koj, Mia", "Ua ou alofa ia te oe, Mia", "Ou te alofa ia te oe, Mia",
+      "Aloha au iā 'oe, Mia", "Kimi o ai shiteru, Mia", "Ke a go rata, Mia", "Mo nifẹ rẹ, Mia",
+      "Amo-te, Mia", "Mi amas vin, Mia", "Tab tom hlub koj, Mia", "Ndagukunda, Mia",
+      "Ndiyakuthanda, Mia", "Ek is lief vir jou, Mia", "Waan ku jeclahay, Mia", "Kuna son ki, Mia",
+      "Ina son ka, Mia", "Tôi yêu bạn, Mia", "Saya cinta padamu, Mia", "Kochaniam cię, Mia",
+      "Eu gosto muito de você, Mia", "Mi ta stimabo, Mia", "Amote, Mia", "Lubim te, Mia",
+      "Мен сені сүйемін, Mia", "Сени сүйөм, Mia", "S’ellu t’amu, Mia", "Ana behibak, Mia",
+      "Aš myliu tave, Mia", "Ես սիրում եմ քեզ, Միա", "მე შენ მიყვარხარ, მია", "Ek het jou lief, Mia",
+      "Te dua, Mia", "Unë të dua, Mia", "Mo fẹràn rẹ, Mia", "Naan unnai kadhalikkiren, Mia",
+      "Nenu ninnu premistunnanu, Mia", "Njan ninne snehikkunnu, Mia", "Nan unnai nesikkiren, Mia", "Main tumse mohabbat karta hoon, Mia",
+      "Ami tomake bhalobashi, Mia", "Hum tumse pyaar karte hain, Mia", "Iska ku jeclahay, Mia", "Mo ni ife re, Mia"
+    ];
+
+    const layer = document.getElementById("orbitLayer");
+    const sparklesLayer = document.getElementById("sparkles");
+    const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const items = [];
+
+    let pointerX = center.x;
+    let pointerY = center.y;
+    let hasPointer = false;
+
+    const baseRadius = () => Math.min(window.innerWidth, window.innerHeight) * 0.3;
+    const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * 0.08;
+
+    const music = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+    let musicStarted = false;
+
+    async function startMusic() {
+      if (musicStarted) return;
+      try {
+        await music.play();
+        musicStarted = true;
+        musicToggle.textContent = "❚❚ 至少还有你";
+      } catch {
+        musicToggle.textContent = "▶ 至少还有你";
+      }
+    }
+
+    musicToggle.addEventListener("click", async () => {
+      if (music.paused) {
+        await startMusic();
+      } else {
+        music.pause();
+        musicToggle.textContent = "▶ 至少还有你";
+      }
+    });
+
+    window.addEventListener("pointerdown", startMusic, { once: true });
+    window.addEventListener("touchstart", startMusic, { once: true, passive: true });
+
+
+    function createSparkles() {
+      sparklesLayer.innerHTML = "";
+      const sparkleCount = Math.max(220, Math.floor((window.innerWidth * window.innerHeight) / 6200));
+      for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement("span");
+        sparkle.className = "sparkle";
+        sparkle.style.setProperty("--x", `${Math.random() * 100}%`);
+        sparkle.style.setProperty("--size", `${(Math.random() * 2.4 + 0.8).toFixed(2)}px`);
+        sparkle.style.setProperty("--twinkle", `${(Math.random() * 2.8 + 2.2).toFixed(2)}s`);
+        sparkle.style.setProperty("--fall", `${(Math.random() * 10 + 9).toFixed(2)}s`);
+        sparkle.style.setProperty("--driftX", `${(Math.random() * 140 - 70).toFixed(1)}px`);
+        sparkle.style.setProperty("--delay", `${(-Math.random() * 18).toFixed(2)}s`);
+        sparklesLayer.appendChild(sparkle);
+      }
+    }
+
+    function createPhrases() {
+      layer.innerHTML = "";
+      items.length = 0;
+
+      const ringCount = 8;
+      const rings = Array.from({ length: ringCount }, () => []);
+
+      translations.forEach((text, index) => {
+        rings[index % ringCount].push({ text, index });
+      });
+
+      rings.forEach((ringTexts, ring) => {
+        ringTexts.forEach((entry, ringIndex) => {
+          const phrase = document.createElement("span");
+          phrase.className = "phrase";
+          phrase.textContent = entry.text;
+          layer.appendChild(phrase);
+
+          const spread = (ringIndex / ringTexts.length) * Math.PI * 2;
+          const angle = spread + ring * 0.24 + (ring % 2) * 0.08;
+          const speed = 0.00034 + ring * 0.00007;
+          const radius = baseRadius() + ring * ringGap() + Math.random() * 14;
+
+          items.push({
+            el: phrase,
+            ring,
+            angle,
+            speed,
+            radius,
+            jitterSeed: Math.random() * Math.PI * 2,
+            offsetX: 0,
+            offsetY: 0,
+            posX: center.x,
+            posY: center.y
+          });
+        });
+      });
+    }
+
+    function handlePointer(x, y) {
+      pointerX = x;
+      pointerY = y;
+      hasPointer = true;
+    }
+
+    window.addEventListener("mousemove", (e) => handlePointer(e.clientX, e.clientY));
+    window.addEventListener("touchmove", (e) => {
+      const t = e.touches[0];
+      if (t) handlePointer(t.clientX, t.clientY);
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      center.x = window.innerWidth / 2;
+      center.y = window.innerHeight / 2;
+      createSparkles();
+      createPhrases();
+    });
+
+    function animate(time) {
+      const now = time || 0;
+      if (!hasPointer) {
+        const idleRadius = Math.min(window.innerWidth, window.innerHeight) * 0.09;
+        pointerX = center.x + Math.cos(now * 0.00015) * idleRadius;
+        pointerY = center.y + Math.sin(now * 0.00012) * idleRadius;
+      }
+
+      for (const item of items) {
+        item.angle += item.speed;
+
+        const wobble = Math.sin(now * 0.00095 + item.jitterSeed) * 9;
+        const orbitRadius = item.radius + wobble;
+        const targetX = center.x + Math.cos(item.angle) * orbitRadius;
+        const targetY = center.y + Math.sin(item.angle) * orbitRadius * 0.72;
+
+        const dx = targetX + item.offsetX - pointerX;
+        const dy = targetY + item.offsetY - pointerY;
+        const dist = Math.hypot(dx, dy);
+        const forceRange = 160;
+
+        if (dist < forceRange && dist > 0.0001) {
+          const strength = (1 - dist / forceRange) ** 1.8;
+          const push = strength * 9.5;
+          item.offsetX += (dx / dist) * push;
+          item.offsetY += (dy / dist) * push;
+        }
+
+        item.offsetX *= 0.93;
+        item.offsetY *= 0.93;
+
+        item.posX += (targetX + item.offsetX - item.posX) * 0.09;
+        item.posY += (targetY + item.offsetY - item.posY) * 0.09;
+
+        const opacity = 0.34 + (item.ring + 1) * 0.07;
+        item.el.style.opacity = Math.min(opacity, 0.84).toFixed(2);
+        item.el.style.transform = `translate(calc(-50% + ${item.posX - center.x}px), calc(-50% + ${item.posY - center.y}px))`;
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    createSparkles();
+    createPhrases();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
