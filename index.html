@@ -219,7 +219,7 @@
   </main>
   <div class="sparkles" id="sparkles"></div>
 
-  <audio id="bgMusic" src="至少还有你 (Live).mp3" loop preload="auto" autoplay playsinline></audio>
+  <audio id="bgMusic" src="至少还有你 (Live).mp3" loop preload="auto" autoplay></audio>
 
   <script>
     const translations = [
@@ -262,18 +262,32 @@
     const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.066 : 0.08);
 
     const music = document.getElementById("bgMusic");
+    let autoplayRetryId = null;
 
     async function startMusic() {
       try {
         await music.play();
+        if (autoplayRetryId) {
+          clearInterval(autoplayRetryId);
+          autoplayRetryId = null;
+        }
       } catch {
-        // Autoplay may still be blocked by browser policy.
+        // Keep retrying without requiring user interaction.
       }
     }
 
-    startMusic();
-    window.addEventListener("load", startMusic, { once: true });
-    music.addEventListener("canplaythrough", startMusic, { once: true });
+    function beginAutoplayRetries() {
+      startMusic();
+      if (!autoplayRetryId) {
+        autoplayRetryId = setInterval(startMusic, 1500);
+      }
+    }
+
+    beginAutoplayRetries();
+    music.addEventListener("canplay", startMusic);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) startMusic();
+    });
 
     function createSparkles() {
       sparklesLayer.innerHTML = "";
