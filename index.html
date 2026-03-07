@@ -130,6 +130,8 @@
       letter-spacing: 0.06em;
       font-weight: 700;
       text-align: center;
+      width: min(90vw, 980px);
+      line-height: 1.1;
       color: var(--text-main);
       text-shadow:
         0 0 12px rgba(255, 189, 219, 0.85),
@@ -213,6 +215,23 @@
     }
 
     @media (max-width: 760px) {
+      html, body { touch-action: pan-y; }
+      .g1 { width: min(70vw, 420px); height: min(70vw, 420px); left: 8%; top: 6%; }
+      .g2 { width: min(64vw, 390px); height: min(64vw, 390px); right: 3%; bottom: 6%; }
+      .phrase { font-size: clamp(0.58rem, 2.3vw, 0.84rem); opacity: 0.78; }
+      .center { font-size: clamp(1.85rem, 9vw, 3.3rem); width: 92vw; }
+      .music-control {
+        right: max(10px, env(safe-area-inset-right));
+        top: max(10px, env(safe-area-inset-top));
+        font-size: 0.72rem;
+        padding: 6px 10px;
+      }
+      .phrase.featured-vietnamese { font-size: clamp(0.72rem, 3.1vw, 1.02rem); }
+    }
+
+    @media (max-width: 430px) {
+      .center { font-size: clamp(1.7rem, 8.5vw, 2.6rem); letter-spacing: 0.04em; }
+      .music-control { font-size: 0.68rem; padding: 6px 8px; }
       .phrase { font-size: clamp(0.62rem, 2.45vw, 0.9rem); opacity: 0.84; }
       .center { font-size: clamp(2.1rem, 10vw, 4.1rem); }
     }
@@ -268,6 +287,9 @@
     let pointerY = center.y;
     let hasPointer = false;
 
+    const isPhone = () => window.innerWidth <= 760;
+    const baseRadius = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.24 : 0.3);
+    const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.066 : 0.08);
     const baseRadius = () => Math.min(window.innerWidth, window.innerHeight) * 0.3;
     const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * 0.08;
 
@@ -298,6 +320,11 @@
     window.addEventListener("pointerdown", startMusic, { once: true });
     window.addEventListener("touchstart", startMusic, { once: true, passive: true });
 
+    function createSparkles() {
+      sparklesLayer.innerHTML = "";
+      const sparkleCount = isPhone()
+        ? Math.max(120, Math.floor((window.innerWidth * window.innerHeight) / 7800))
+        : Math.max(220, Math.floor((window.innerWidth * window.innerHeight) / 6200));
 
     function createSparkles() {
       sparklesLayer.innerHTML = "";
@@ -319,6 +346,7 @@
       layer.innerHTML = "";
       items.length = 0;
 
+      const ringCount = isPhone() ? 6 : 8;
       const ringCount = 8;
       const rings = Array.from({ length: ringCount }, () => []);
 
@@ -395,6 +423,11 @@
         const dx = targetX + item.offsetX - pointerX;
         const dy = targetY + item.offsetY - pointerY;
         const dist = Math.hypot(dx, dy);
+        const forceRange = isPhone() ? 130 : 160;
+
+        if (dist < forceRange && dist > 0.0001) {
+          const strength = (1 - dist / forceRange) ** 1.8;
+          const push = strength * (isPhone() ? 7.2 : 9.5);
         const forceRange = 160;
 
         if (dist < forceRange && dist > 0.0001) {
