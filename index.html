@@ -262,18 +262,32 @@
     const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.066 : 0.08);
 
     const music = document.getElementById("bgMusic");
+    let autoplayRetryId = null;
 
     async function startMusic() {
       try {
         await music.play();
+        if (autoplayRetryId) {
+          clearInterval(autoplayRetryId);
+          autoplayRetryId = null;
+        }
       } catch {
-        // Some browsers block autoplay until user interaction.
+        // Keep retrying without requiring user interaction.
       }
     }
 
-    startMusic();
-    window.addEventListener("pointerdown", startMusic, { once: true });
-    window.addEventListener("touchstart", startMusic, { once: true, passive: true });
+    function beginAutoplayRetries() {
+      startMusic();
+      if (!autoplayRetryId) {
+        autoplayRetryId = setInterval(startMusic, 1500);
+      }
+    }
+
+    beginAutoplayRetries();
+    music.addEventListener("canplay", startMusic);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) startMusic();
+    });
 
     function createSparkles() {
       sparklesLayer.innerHTML = "";
