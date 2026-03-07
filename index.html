@@ -164,22 +164,6 @@
       user-select: none;
     }
 
-    .music-control {
-      position: fixed;
-      right: 16px;
-      top: 14px;
-      z-index: 2147483647;
-      border: 1px solid rgba(255, 219, 238, 0.35);
-      background: rgba(18, 10, 30, 0.45);
-      color: #ffeaf4;
-      font-size: 0.84rem;
-      letter-spacing: 0.02em;
-      border-radius: 999px;
-      padding: 8px 12px;
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-    }
-
     .phrase.featured-vietnamese {
       color: #fff2fa;
       font-size: clamp(0.86rem, 1.35vw, 1.32rem);
@@ -216,18 +200,11 @@
       .g2 { width: min(64vw, 390px); height: min(64vw, 390px); right: 3%; bottom: 6%; }
       .phrase { font-size: clamp(0.58rem, 2.3vw, 0.84rem); opacity: 0.78; }
       .center { font-size: clamp(1.85rem, 9vw, 3.3rem); width: 92vw; }
-      .music-control {
-        right: max(10px, env(safe-area-inset-right));
-        top: max(10px, env(safe-area-inset-top));
-        font-size: 0.72rem;
-        padding: 6px 10px;
-      }
       .phrase.featured-vietnamese { font-size: clamp(0.72rem, 3.1vw, 1.02rem); }
     }
 
     @media (max-width: 430px) {
       .center { font-size: clamp(1.7rem, 8.5vw, 2.6rem); letter-spacing: 0.04em; }
-      .music-control { font-size: 0.68rem; padding: 6px 8px; }
     }
   </style>
 </head>
@@ -242,8 +219,7 @@
   </main>
   <div class="sparkles" id="sparkles"></div>
 
-  <audio id="bgMusic" src="至少还有你 (Live).mp3" loop preload="auto"></audio>
-  <button class="music-control" id="musicToggle" aria-label="Toggle background music">♪ 至少还有你</button>
+  <audio id="bgMusic" src="至少还有你 (Live).mp3" loop preload="auto" autoplay></audio>
 
   <script>
     const translations = [
@@ -269,7 +245,22 @@
       "Aš myliu tave, Mia", "Ես սիրում եմ քեզ, Միա", "მე შენ მიყვარხარ, მია", "Ek het jou lief, Mia",
       "Te dua, Mia", "Unë të dua, Mia", "Mo fẹràn rẹ, Mia", "Naan unnai kadhalikkiren, Mia",
       "Nenu ninnu premistunnanu, Mia", "Njan ninne snehikkunnu, Mia", "Nan unnai nesikkiren, Mia", "Main tumse mohabbat karta hoon, Mia",
-      "Ami tomake bhalobashi, Mia", "Hum tumse pyaar karte hain, Mia", "Iska ku jeclahay, Mia", "Mo ni ife re, Mia"
+      "Ami tomake bhalobashi, Mia", "Hum tumse pyaar karte hain, Mia", "Iska ku jeclahay, Mia", "Mo ni ife re, Mia",
+      "You are my favorite person, Mia", "You make my world brighter, Mia", "I miss you every second, Mia", "Forever and always, Mia",
+      "Every heartbeat says your name, Mia", "You are my moon and stars, Mia", "I choose you every day, Mia", "My heart belongs to you, Mia",
+      "You are my sweetest dream, Mia", "With you, everything feels like home, Mia", "You are my forever love, Mia", "I adore you endlessly, Mia",
+      "Mia, you are my sunshine", "Mia, you are my safe place", "Mia, you are my miracle", "Mia, you are my universe",
+      "Te quiero para siempre, Mia", "Mi corazón es tuyo, Mia", "Eres mi alegría, Mia", "Siempre contigo, Mia",
+      "Tu es mon étoile, Mia", "Tu es mon bonheur, Mia", "Pour toujours avec toi, Mia", "Mon cœur est à toi, Mia",
+      "Sei il mio sole, Mia", "Per sempre insieme, Mia", "Sei il mio cuore, Mia", "Ti amerò per sempre, Mia",
+      "Du bist mein Herz, Mia", "Für immer wir zwei, Mia", "Du bist mein Zuhause, Mia", "Ich vermisse dich so sehr, Mia",
+      "Você é meu coração, Mia", "Para sempre nós dois, Mia", "Você é minha luz, Mia", "Sinto saudade de você, Mia",
+      "Ты мой свет, Мия", "Навсегда с тобой, Мия", "Моё сердце твоё, Мия", "Ты моё счастье, Мия",
+      "你是我的小宇宙，米娅", "你是我心里的光，米娅", "我会一直爱你，米娅", "永远在你身边，米娅",
+      "君は僕の宝物、ミア", "ずっと一緒だよ、ミア", "ミアは僕の光", "永遠に愛してる、ミア",
+      "너는 나의 전부야, 미아", "영원히 함께하자, 미아", "미아는 나의 빛", "항상 네 곁에 있을게, 미아",
+      "Anh nhớ em rất nhiều, Mia", "Mãi mãi bên em, Mia", "Trái tim anh thuộc về em, Mia", "Em là ánh sáng của anh, Mia",
+      "Je bent mijn alles, Mia", "Voor altijd bij jou, Mia", "Jij bent mijn licht, Mia", "Mijn hart is van jou, Mia"
     ];
 
     const layer = document.getElementById("orbitLayer");
@@ -286,31 +277,18 @@
     const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.066 : 0.08);
 
     const music = document.getElementById("bgMusic");
-    const musicToggle = document.getElementById("musicToggle");
-    let musicStarted = false;
 
     async function startMusic() {
-      if (musicStarted) return;
       try {
         await music.play();
-        musicStarted = true;
-        musicToggle.textContent = "❚❚ 至少还有你";
       } catch {
-        musicToggle.textContent = "▶ 至少还有你";
+        // Autoplay may still be blocked by browser policy.
       }
     }
 
-    musicToggle.addEventListener("click", async () => {
-      if (music.paused) {
-        await startMusic();
-      } else {
-        music.pause();
-        musicToggle.textContent = "▶ 至少还有你";
-      }
-    });
-
-    window.addEventListener("pointerdown", startMusic, { once: true });
-    window.addEventListener("touchstart", startMusic, { once: true, passive: true });
+    startMusic();
+    window.addEventListener("load", startMusic, { once: true });
+    music.addEventListener("canplaythrough", startMusic, { once: true });
 
     function createSparkles() {
       sparklesLayer.innerHTML = "";
