@@ -164,22 +164,6 @@
       user-select: none;
     }
 
-    .music-control {
-      position: fixed;
-      right: 16px;
-      top: 14px;
-      z-index: 2147483647;
-      border: 1px solid rgba(255, 219, 238, 0.35);
-      background: rgba(18, 10, 30, 0.45);
-      color: #ffeaf4;
-      font-size: 0.84rem;
-      letter-spacing: 0.02em;
-      border-radius: 999px;
-      padding: 8px 12px;
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-    }
-
     .phrase.featured-vietnamese {
       color: #fff2fa;
       font-size: clamp(0.86rem, 1.35vw, 1.32rem);
@@ -216,18 +200,11 @@
       .g2 { width: min(64vw, 390px); height: min(64vw, 390px); right: 3%; bottom: 6%; }
       .phrase { font-size: clamp(0.58rem, 2.3vw, 0.84rem); opacity: 0.78; }
       .center { font-size: clamp(1.85rem, 9vw, 3.3rem); width: 92vw; }
-      .music-control {
-        right: max(10px, env(safe-area-inset-right));
-        top: max(10px, env(safe-area-inset-top));
-        font-size: 0.72rem;
-        padding: 6px 10px;
-      }
       .phrase.featured-vietnamese { font-size: clamp(0.72rem, 3.1vw, 1.02rem); }
     }
 
     @media (max-width: 430px) {
       .center { font-size: clamp(1.7rem, 8.5vw, 2.6rem); letter-spacing: 0.04em; }
-      .music-control { font-size: 0.68rem; padding: 6px 8px; }
     }
   </style>
 </head>
@@ -242,8 +219,7 @@
   </main>
   <div class="sparkles" id="sparkles"></div>
 
-  <audio id="bgMusic" src="至少还有你 (Live).mp3" loop preload="auto"></audio>
-  <button class="music-control" id="musicToggle" aria-label="Toggle background music">♪ 至少还有你</button>
+  <audio id="bgMusic" src="至少还有你 (Live).mp3" loop preload="auto" autoplay></audio>
 
   <script>
     const translations = [
@@ -286,31 +262,32 @@
     const ringGap = () => Math.min(window.innerWidth, window.innerHeight) * (isPhone() ? 0.066 : 0.08);
 
     const music = document.getElementById("bgMusic");
-    const musicToggle = document.getElementById("musicToggle");
-    let musicStarted = false;
+    let autoplayRetryId = null;
 
     async function startMusic() {
-      if (musicStarted) return;
       try {
         await music.play();
-        musicStarted = true;
-        musicToggle.textContent = "❚❚ 至少还有你";
+        if (autoplayRetryId) {
+          clearInterval(autoplayRetryId);
+          autoplayRetryId = null;
+        }
       } catch {
-        musicToggle.textContent = "▶ 至少还有你";
+        // Keep retrying without requiring user interaction.
       }
     }
 
-    musicToggle.addEventListener("click", async () => {
-      if (music.paused) {
-        await startMusic();
-      } else {
-        music.pause();
-        musicToggle.textContent = "▶ 至少还有你";
+    function beginAutoplayRetries() {
+      startMusic();
+      if (!autoplayRetryId) {
+        autoplayRetryId = setInterval(startMusic, 1500);
       }
-    });
+    }
 
-    window.addEventListener("pointerdown", startMusic, { once: true });
-    window.addEventListener("touchstart", startMusic, { once: true, passive: true });
+    beginAutoplayRetries();
+    music.addEventListener("canplay", startMusic);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) startMusic();
+    });
 
     function createSparkles() {
       sparklesLayer.innerHTML = "";
